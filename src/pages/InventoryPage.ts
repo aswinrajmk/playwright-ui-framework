@@ -2,11 +2,7 @@ import { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
 import { Header } from "../components/Header";
 
-export type SortOption =
-  | "az"
-  | "za"
-  | "lohi"
-  | "hilo";
+export type SortOption = "az" | "za" | "lohi" | "hilo";
 
 export class InventoryPage extends BasePage {
   protected readonly url = "/inventory.html";

@@ -4,7 +4,10 @@ import { logger } from "../utils/Logger";
 export class ApiClient {
   constructor(private readonly request: APIRequestContext) {}
 
-  async get<T>(endpoint: string, params?: Record<string, string>): Promise<{
+  async get<T>(
+    endpoint: string,
+    params?: Record<string, string>,
+  ): Promise<{
     status: number;
     data: T;
   }> {
@@ -15,7 +18,10 @@ export class ApiClient {
     return { status: response.status(), data };
   }
 
-  async post<T>(endpoint: string, body: unknown): Promise<{
+  async post<T>(
+    endpoint: string,
+    body: unknown,
+  ): Promise<{
     status: number;
     data: T;
   }> {
@@ -28,7 +34,10 @@ export class ApiClient {
     return { status: response.status(), data };
   }
 
-  async put<T>(endpoint: string, body: unknown): Promise<{
+  async put<T>(
+    endpoint: string,
+    body: unknown,
+  ): Promise<{
     status: number;
     data: T;
   }> {
@@ -41,7 +50,10 @@ export class ApiClient {
     return { status: response.status(), data };
   }
 
-  async patch<T>(endpoint: string, body: unknown): Promise<{
+  async patch<T>(
+    endpoint: string,
+    body: unknown,
+  ): Promise<{
     status: number;
     data: T;
   }> {

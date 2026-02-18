@@ -3,10 +3,7 @@ import { Page, Locator } from "@playwright/test";
 export class WaitHelper {
   constructor(private readonly page: Page) {}
 
-  async waitForUrlContains(
-    urlPart: string,
-    timeout = 10000
-  ): Promise<void> {
+  async waitForUrlContains(urlPart: string, timeout = 10000): Promise<void> {
     await this.page.waitForURL(`**/*${urlPart}*`, { timeout });
   }
 
@@ -14,23 +11,17 @@ export class WaitHelper {
     await this.page.waitForLoadState("networkidle", { timeout });
   }
 
-  async waitForVisible(
-    locator: Locator,
-    timeout = 10000
-  ): Promise<void> {
+  async waitForVisible(locator: Locator, timeout = 10000): Promise<void> {
     await locator.waitFor({ state: "visible", timeout });
   }
 
-  async waitForHidden(
-    locator: Locator,
-    timeout = 10000
-  ): Promise<void> {
+  async waitForHidden(locator: Locator, timeout = 10000): Promise<void> {
     await locator.waitFor({ state: "hidden", timeout });
   }
 
   async waitForResponse(
     urlPattern: string | RegExp,
-    timeout = 10000
+    timeout = 10000,
   ): Promise<void> {
     await this.page.waitForResponse(urlPattern, { timeout });
   }
@@ -38,7 +29,7 @@ export class WaitHelper {
   async poll(
     fn: () => Promise<boolean>,
     timeout = 10000,
-    interval = 500
+    interval = 500,
   ): Promise<void> {
     const start = Date.now();
     while (Date.now() - start < timeout) {

@@ -11,22 +11,17 @@ test.describe("Login Page", () => {
     expect(await loginPage.isLoginButtonVisible()).toBe(true);
   });
 
-  test("should login with valid credentials", async ({
-    loginPage,
-    page,
-  }) => {
+  test("should login with valid credentials", async ({ loginPage, page }) => {
     await loginPage.login(users.standardUser);
     await expect(page).toHaveURL(/inventory/);
   });
 
-  test("should show error for invalid credentials", async ({
-    loginPage,
-  }) => {
+  test("should show error for invalid credentials", async ({ loginPage }) => {
     await loginPage.login(users.invalidUser);
     expect(await loginPage.isErrorVisible()).toBe(true);
     const errorMsg = await loginPage.getErrorMessage();
     expect(errorMsg).toContain(
-      "Username and password do not match any user in this service"
+      "Username and password do not match any user in this service",
     );
   });
 
@@ -37,17 +32,13 @@ test.describe("Login Page", () => {
     expect(errorMsg).toContain("locked out");
   });
 
-  test("should show error when username is empty", async ({
-    loginPage,
-  }) => {
+  test("should show error when username is empty", async ({ loginPage }) => {
     await loginPage.login({ username: "", password: "secret_sauce" });
     const errorMsg = await loginPage.getErrorMessage();
     expect(errorMsg).toContain("Username is required");
   });
 
-  test("should show error when password is empty", async ({
-    loginPage,
-  }) => {
+  test("should show error when password is empty", async ({ loginPage }) => {
     await loginPage.login({ username: "standard_user", password: "" });
     const errorMsg = await loginPage.getErrorMessage();
     expect(errorMsg).toContain("Password is required");

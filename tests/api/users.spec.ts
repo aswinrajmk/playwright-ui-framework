@@ -10,9 +10,7 @@ test.describe("JSONPlaceholder API", () => {
     expect(data[0]).toHaveProperty("username");
   });
 
-  test("GET /users/:id - should return a single user", async ({
-    userApi,
-  }) => {
+  test("GET /users/:id - should return a single user", async ({ userApi }) => {
     const { status, data } = await userApi.getUserById(1);
     expect(status).toBe(200);
     expect(data.id).toBe(1);
@@ -43,7 +41,11 @@ test.describe("JSONPlaceholder API", () => {
   });
 
   test("POST /posts - should create a new post", async ({ userApi }) => {
-    const payload = { userId: 1, title: "Test Post", body: "Test body content" };
+    const payload = {
+      userId: 1,
+      title: "Test Post",
+      body: "Test body content",
+    };
     const { status, data } = await userApi.createPost(payload);
     expect(status).toBe(201);
     expect(data.title).toBe(payload.title);
@@ -53,7 +55,12 @@ test.describe("JSONPlaceholder API", () => {
   });
 
   test("PUT /posts/:id - should update a post", async ({ userApi }) => {
-    const payload = { id: 1, userId: 1, title: "Updated Title", body: "Updated body" };
+    const payload = {
+      id: 1,
+      userId: 1,
+      title: "Updated Title",
+      body: "Updated body",
+    };
     const { status, data } = await userApi.updatePost(1, payload);
     expect(status).toBe(200);
     expect(data.title).toBe("Updated Title");

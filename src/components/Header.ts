@@ -16,9 +16,7 @@ export class Header {
     this.logoutLink = page.locator("[data-test='logout-sidebar-link']");
     this.appLogo = page.locator(".app_logo");
     this.menuCloseButton = page.getByRole("button", { name: "Close Menu" });
-    this.resetAppStateLink = page.locator(
-      "[data-test='reset-sidebar-link']"
-    );
+    this.resetAppStateLink = page.locator("[data-test='reset-sidebar-link']");
   }
 
   async getCartCount(): Promise<number> {

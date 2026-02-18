@@ -17,9 +17,7 @@ export class ProductDetailPage extends BasePage {
     super(page);
     this.header = new Header(page);
     this.productName = page.locator("[data-test='inventory-item-name']");
-    this.productDescription = page.locator(
-      "[data-test='inventory-item-desc']"
-    );
+    this.productDescription = page.locator("[data-test='inventory-item-desc']");
     this.productPrice = page.locator("[data-test='inventory-item-price']");
     this.addToCartButton = page.locator("button[id^='add-to-cart']");
     this.removeButton = page.locator("button[id^='remove']");

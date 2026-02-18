@@ -28,9 +28,7 @@ test.describe("Inventory Page", () => {
     expect(count).toBe(1);
   });
 
-  test("should add multiple products to cart", async ({
-    inventoryPage,
-  }) => {
+  test("should add multiple products to cart", async ({ inventoryPage }) => {
     await inventoryPage.addToCartByName("Sauce Labs Backpack");
     await inventoryPage.addToCartByName("Sauce Labs Bike Light");
     const count = await inventoryPage.header.getCartCount();

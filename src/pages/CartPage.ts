@@ -18,7 +18,7 @@ export class CartPage extends BasePage {
     this.cartItems = new CartItemComponent(page);
     this.checkoutButton = page.locator("[data-test='checkout']");
     this.continueShoppingButton = page.locator(
-      "[data-test='continue-shopping']"
+      "[data-test='continue-shopping']",
     );
     this.title = page.locator("[data-test='title']");
   }

@@ -13,7 +13,8 @@ dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 export const envConfig = {
   ENV,
   BASE_URL: process.env.BASE_URL || "https://www.saucedemo.com",
-  API_BASE_URL: process.env.API_BASE_URL || "https://jsonplaceholder.typicode.com",
+  API_BASE_URL:
+    process.env.API_BASE_URL || "https://jsonplaceholder.typicode.com",
   TIMEOUT: Number(process.env.TIMEOUT) || 30000,
   RETRIES: Number(process.env.RETRIES) || 1,
   WORKERS: Number(process.env.WORKERS) || 2,
