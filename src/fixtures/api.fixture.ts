@@ -1,7 +1,7 @@
 import { test as base, expect } from "@playwright/test";
-import { ApiClient } from "../api/ApiClient";
-import { UserApi } from "../api/endpoints/UserApi";
-import { envConfig } from "../config/env.config";
+import { ApiClient } from "@api/ApiClient";
+import { UserApi } from "@api/endpoints/UserApi";
+import { envConfig } from "@config/env.config";
 
 type ApiFixtures = {
   apiClient: ApiClient;

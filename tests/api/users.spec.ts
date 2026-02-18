@@ -1,4 +1,4 @@
-import { apiTest as test, expect } from "../../src/fixtures/api.fixture";
+import { apiTest as test, expect } from "@fixtures/api.fixture";
 
 test.describe("JSONPlaceholder API", () => {
   test("GET /users - should return list of users", async ({ userApi }) => {

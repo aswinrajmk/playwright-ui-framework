@@ -1,6 +1,6 @@
 import { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { Header } from "../components/Header";
+import { Header } from "@components/Header";
 
 export type SortOption = "az" | "za" | "lohi" | "hilo";
 

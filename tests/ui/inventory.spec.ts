@@ -1,7 +1,7 @@
 import {
   authenticatedTest as test,
   expect,
-} from "../../src/fixtures/auth.fixture";
+} from "@fixtures/auth.fixture";
 
 test.describe("Inventory Page", () => {
   test("should display products after login", async ({ inventoryPage }) => {

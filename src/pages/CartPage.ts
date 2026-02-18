@@ -1,7 +1,7 @@
 import { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { Header } from "../components/Header";
-import { CartItemComponent } from "../components/CartItemComponent";
+import { Header } from "@components/Header";
+import { CartItemComponent } from "@components/CartItemComponent";
 
 export class CartPage extends BasePage {
   protected readonly url = "/cart.html";

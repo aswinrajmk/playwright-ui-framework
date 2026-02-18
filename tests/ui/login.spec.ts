@@ -1,5 +1,5 @@
-import { test, expect } from "../../src/fixtures/base.fixture";
-import users from "../../src/data/test-data/users.json";
+import { test, expect } from "@fixtures/base.fixture";
+import users from "@data/test-data/users.json";
 
 test.describe("Login Page", () => {
   test.beforeEach(async ({ loginPage }) => {

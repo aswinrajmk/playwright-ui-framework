@@ -1,7 +1,7 @@
 import {
   authenticatedTest as test,
   expect,
-} from "../../src/fixtures/auth.fixture";
+} from "@fixtures/auth.fixture";
 
 test.describe("Cart Page", () => {
   test.beforeEach(async ({ inventoryPage }) => {

@@ -1,5 +1,5 @@
-import { test as baseTest } from "./base.fixture";
-import { envConfig } from "../config/env.config";
+import { test as baseTest } from "@fixtures/base.fixture";
+import { envConfig } from "@config/env.config";
 
 /**
  * Auth fixture — extends base fixtures with a pre-authenticated state.

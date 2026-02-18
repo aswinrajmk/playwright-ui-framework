@@ -1,8 +1,8 @@
 import {
   authenticatedTest as test,
   expect,
-} from "../../src/fixtures/auth.fixture";
-import checkoutData from "../../src/data/test-data/checkout.json";
+} from "@fixtures/auth.fixture";
+import checkoutData from "@data/test-data/checkout.json";
 
 test.describe("Checkout Flow", () => {
   test.beforeEach(async ({ inventoryPage }) => {

@@ -1,5 +1,5 @@
 import { APIRequestContext } from "@playwright/test";
-import { logger } from "../utils/Logger";
+import { logger } from "@utils/Logger";
 
 export class ApiClient {
   constructor(private readonly request: APIRequestContext) {}

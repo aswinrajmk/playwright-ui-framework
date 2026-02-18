@@ -1,6 +1,6 @@
 import { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { Header } from "../components/Header";
+import { Header } from "@components/Header";
 
 export class ProductDetailPage extends BasePage {
   protected readonly url = "/inventory-item.html";
