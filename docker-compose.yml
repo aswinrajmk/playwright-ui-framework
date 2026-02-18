@@ -1,0 +1,40 @@
+services:
+  playwright:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ENV=${ENV:-dev}
+      - CI=true
+    volumes:
+      - ./test-results:/app/test-results
+      - ./allure-results:/app/allure-results
+      - ./playwright-report:/app/playwright-report
+    command: npx playwright test --project=chromium
+
+  # Run all browsers
+  playwright-all-browsers:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ENV=${ENV:-dev}
+      - CI=true
+    volumes:
+      - ./test-results:/app/test-results
+      - ./allure-results:/app/allure-results
+      - ./playwright-report:/app/playwright-report
+    command: npx playwright test
+
+  # API tests only
+  playwright-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ENV=${ENV:-dev}
+      - CI=true
+    volumes:
+      - ./test-results:/app/test-results
+      - ./allure-results:/app/allure-results
+    command: npx playwright test --project=api
