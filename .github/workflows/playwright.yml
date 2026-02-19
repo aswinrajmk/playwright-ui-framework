@@ -73,7 +73,7 @@ jobs:
         with:
           name: allure-results-${{ matrix.project }}
           path: allure-results/
-          retention-days: 30
+          retention-days: 1        # intermediate — consumed by allure-report job only
 
   api-tests:
     runs-on: ubuntu-latest
@@ -101,9 +101,7 @@ jobs:
         if: always()
         with:
           name: api-test-results
-          path: |
-            test-results/
-            allure-results/
+          path: test-results/
           retention-days: 30
 
   # ── Docker image security scan (Trivy) ────────────────────────────────────
@@ -188,7 +186,6 @@ jobs:
           path: |
             test-results/
             playwright-report/
-            allure-results/
           retention-days: 30
 
   allure-report:
@@ -219,6 +216,13 @@ jobs:
 
       - name: Generate Allure report
         run: allure generate allure-results-all --clean -o allure-report
+
+      - name: Upload Allure HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-html-report
+          path: allure-report/
+          retention-days: 30
 
       - name: Deploy Allure report to GitHub Pages
         if: github.ref == 'refs/heads/main'
