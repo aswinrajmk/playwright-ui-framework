@@ -10,25 +10,22 @@ test.describe("Checkout Flow", () => {
     await inventoryPage.header.goToCart();
   });
 
-  test("should complete full checkout flow", async ({
+  // @sanity — core happy path
+  test("should complete full checkout flow", { tag: "@sanity" }, async ({
     cartPage,
     checkoutPage,
     page,
   }) => {
-    // Step 1: Cart → Checkout
     await cartPage.checkout();
     await expect(page).toHaveURL(/checkout-step-one/);
 
-    // Step 2: Fill info → Overview
     await checkoutPage.fillCheckoutInfo(checkoutData.validCheckout);
     await checkoutPage.continue();
     await expect(page).toHaveURL(/checkout-step-two/);
 
-    // Verify overview has price info
     const total = await checkoutPage.getTotalPrice();
     expect(total).toContain("Total:");
 
-    // Step 3: Finish
     await checkoutPage.finish();
     await expect(page).toHaveURL(/checkout-complete/);
 
@@ -36,7 +33,32 @@ test.describe("Checkout Flow", () => {
     expect(header).toBe("Thank you for your order!");
   });
 
-  test("should show error for empty first name", async ({
+  // @regression — navigation flows
+  test("should cancel checkout and return to cart", { tag: "@regression" }, async ({
+    cartPage,
+    checkoutPage,
+    page,
+  }) => {
+    await cartPage.checkout();
+    await checkoutPage.cancel();
+    await expect(page).toHaveURL(/cart/);
+  });
+
+  test("should return to products after checkout complete", { tag: "@regression" }, async ({
+    cartPage,
+    checkoutPage,
+    page,
+  }) => {
+    await cartPage.checkout();
+    await checkoutPage.fillCheckoutInfo(checkoutData.validCheckout);
+    await checkoutPage.continue();
+    await checkoutPage.finish();
+    await checkoutPage.backToHome();
+    await expect(page).toHaveURL(/inventory/);
+  });
+
+  // @mock — empty field / boundary validation
+  test("should show error for empty first name", { tag: "@mock" }, async ({
     cartPage,
     checkoutPage,
   }) => {
@@ -48,7 +70,7 @@ test.describe("Checkout Flow", () => {
     expect(error).toContain("First Name is required");
   });
 
-  test("should show error for empty last name", async ({
+  test("should show error for empty last name", { tag: "@mock" }, async ({
     cartPage,
     checkoutPage,
   }) => {
@@ -60,7 +82,7 @@ test.describe("Checkout Flow", () => {
     expect(error).toContain("Last Name is required");
   });
 
-  test("should show error for empty postal code", async ({
+  test("should show error for empty postal code", { tag: "@mock" }, async ({
     cartPage,
     checkoutPage,
   }) => {
@@ -70,28 +92,5 @@ test.describe("Checkout Flow", () => {
 
     const error = await checkoutPage.getError();
     expect(error).toContain("Postal Code is required");
-  });
-
-  test("should cancel checkout and return to cart", async ({
-    cartPage,
-    checkoutPage,
-    page,
-  }) => {
-    await cartPage.checkout();
-    await checkoutPage.cancel();
-    await expect(page).toHaveURL(/cart/);
-  });
-
-  test("should return to products after checkout complete", async ({
-    cartPage,
-    checkoutPage,
-    page,
-  }) => {
-    await cartPage.checkout();
-    await checkoutPage.fillCheckoutInfo(checkoutData.validCheckout);
-    await checkoutPage.continue();
-    await checkoutPage.finish();
-    await checkoutPage.backToHome();
-    await expect(page).toHaveURL(/inventory/);
   });
 });

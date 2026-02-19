@@ -1,0 +1,97 @@
+name: Mock Tests
+
+# Trigger: manual only — choose environment before running
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to run mock tests against"
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TESTS INCLUDED IN THIS SUITE  (tag: @mock)
+# Add/remove tests by editing the tag in the spec file, not here.
+#
+# UI Tests (chromium):
+#   login.spec.ts
+#     ✔ should show error when username is empty
+#     ✔ should show error when password is empty
+#   cart.spec.ts
+#     ✔ should update cart badge after removal
+#   checkout.spec.ts
+#     ✔ should show error for empty first name
+#     ✔ should show error for empty last name
+#     ✔ should show error for empty postal code
+#
+# API Tests:
+#   users.spec.ts
+#     ✔ PATCH /posts/:id - should partially update a post
+#     ✔ DELETE /posts/:id - should delete a post
+# ─────────────────────────────────────────────────────────────────────────────
+
+jobs:
+  mock-ui:
+    name: Mock — UI (${{ github.event.inputs.environment }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      - name: Run @mock UI tests
+        env:
+          ENV: ${{ github.event.inputs.environment }}
+          CI: "true"
+        run: npx playwright test --grep "@mock" --project=chromium
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mock-ui-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+  mock-api:
+    name: Mock — API (${{ github.event.inputs.environment }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Run @mock API tests
+        env:
+          ENV: ${{ github.event.inputs.environment }}
+          CI: "true"
+        run: npx playwright test --grep "@mock" --project=api
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mock-api-results
+          path: test-results/
+          retention-days: 7

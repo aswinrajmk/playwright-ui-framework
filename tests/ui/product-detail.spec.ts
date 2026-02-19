@@ -8,7 +8,8 @@ test.describe("Product Detail Page", () => {
     await inventoryPage.openProductByName("Sauce Labs Backpack");
   });
 
-  test("should display product details", async ({ productDetailPage }) => {
+  // @sanity — core product detail view
+  test("should display product details", { tag: "@sanity" }, async ({ productDetailPage }) => {
     const name = await productDetailPage.getName();
     expect(name).toBe("Sauce Labs Backpack");
 
@@ -19,7 +20,8 @@ test.describe("Product Detail Page", () => {
     expect(price).toBe(29.99);
   });
 
-  test("should add product to cart from detail page", async ({
+  // @regression — cart interactions from detail page
+  test("should add product to cart from detail page", { tag: "@regression" }, async ({
     productDetailPage,
   }) => {
     await productDetailPage.addToCart();
@@ -27,7 +29,7 @@ test.describe("Product Detail Page", () => {
     expect(await productDetailPage.header.getCartCount()).toBe(1);
   });
 
-  test("should remove product from cart on detail page", async ({
+  test("should remove product from cart on detail page", { tag: "@regression" }, async ({
     productDetailPage,
   }) => {
     await productDetailPage.addToCart();
@@ -36,7 +38,7 @@ test.describe("Product Detail Page", () => {
     expect(await productDetailPage.header.getCartCount()).toBe(0);
   });
 
-  test("should navigate back to products", async ({
+  test("should navigate back to products", { tag: "@regression" }, async ({
     productDetailPage,
     page,
   }) => {
