@@ -41,9 +41,10 @@ COPY --from=deps --chown=pwuser:pwuser /build/node_modules ./node_modules
 # Copy source — .dockerignore ensures secrets and generated files are excluded
 COPY --chown=pwuser:pwuser . .
 
-# Pre-create artifact output dirs as pwuser so bind-mounts are writable
-RUN mkdir -p test-results allure-results playwright-report allure-report \
-    && chown -R pwuser:pwuser test-results allure-results playwright-report allure-report
+# Give pwuser ownership of /app itself so it can rmdir/mkdir entries when
+# bind-mounts overlay the output subdirs (removing a dir requires write on parent)
+RUN chown pwuser:pwuser /app \
+    && mkdir -p test-results allure-results playwright-report allure-report
 
 # Drop root — run as the non-root pwuser provided by the official image
 USER pwuser
