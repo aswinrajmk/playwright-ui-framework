@@ -1,0 +1,68 @@
+name: Security Scans
+
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+
+jobs:
+  # ── Docker image vulnerability scan (Trivy) ───────────────────────────────
+  trivy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      security-events: write   # required to upload SARIF to GitHub Security tab
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --target runner \
+            --tag playwright-ui-framework:${{ github.sha }} \
+            .
+
+      # Human-readable table output — always visible in CI logs
+      - name: Trivy scan (table output)
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          image-ref: playwright-ui-framework:${{ github.sha }}
+          format: table
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          exit-code: "0"
+
+      # SARIF upload — surfaces findings in GitHub Security → Code scanning tab
+      - name: Trivy scan (SARIF upload)
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          image-ref: playwright-ui-framework:${{ github.sha }}
+          format: sarif
+          output: trivy-results.sarif
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          exit-code: "0"           # informational — results visible in Security tab without blocking CI
+
+      - name: Upload SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+
+  # ── SonarCloud code quality scan ──────────────────────────────────────────
+  sonarqube:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0             # full history required for blame/new-code analysis
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
