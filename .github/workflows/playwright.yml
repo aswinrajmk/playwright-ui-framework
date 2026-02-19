@@ -149,6 +149,22 @@ jobs:
         with:
           sarif_file: trivy-results.sarif
 
+  # ── SonarQube code quality scan ───────────────────────────────────────────
+  sonarqube:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0             # full history required for blame/new-code analysis
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+
   # ── Run tests inside the Docker image ────────────────────────────────────
   docker-test:
     runs-on: ubuntu-latest
