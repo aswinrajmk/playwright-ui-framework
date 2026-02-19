@@ -1,40 +1,69 @@
 services:
+  # ── Chromium only (default / fastest local run) ───────────────────────────
   playwright:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runner                       # only build the runner stage
+    image: playwright-ui-framework:latest
+    # Load env vars from the host-side env file — never baked into the image
+    env_file:
+      - environments/${ENV:-dev}.env
     environment:
-      - ENV=${ENV:-dev}
-      - CI=true
+      CI: "true"
+      ENV: ${ENV:-dev}
+    # Bind-mount output dirs so reports survive container exit
     volumes:
       - ./test-results:/app/test-results
       - ./allure-results:/app/allure-results
       - ./playwright-report:/app/playwright-report
+    # Prevent container from gaining extra privileges
+    security_opt:
+      - no-new-privileges:true
+    # Resource guardrails — prevent runaway containers on shared machines
+    mem_limit: 2g
+    cpus: "2.0"
     command: npx playwright test --project=chromium
 
-  # Run all browsers
+  # ── All browsers (cross-browser matrix) ───────────────────────────────────
   playwright-all-browsers:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runner
+    image: playwright-ui-framework:latest
+    env_file:
+      - environments/${ENV:-dev}.env
     environment:
-      - ENV=${ENV:-dev}
-      - CI=true
+      CI: "true"
+      ENV: ${ENV:-dev}
     volumes:
       - ./test-results:/app/test-results
       - ./allure-results:/app/allure-results
       - ./playwright-report:/app/playwright-report
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 4g
+    cpus: "4.0"
     command: npx playwright test
 
-  # API tests only
+  # ── API tests only (no browser needed — runs faster) ──────────────────────
   playwright-api:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runner
+    image: playwright-ui-framework:latest
+    env_file:
+      - environments/${ENV:-dev}.env
     environment:
-      - ENV=${ENV:-dev}
-      - CI=true
+      CI: "true"
+      ENV: ${ENV:-dev}
     volumes:
       - ./test-results:/app/test-results
       - ./allure-results:/app/allure-results
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    cpus: "1.0"
     command: npx playwright test --project=api

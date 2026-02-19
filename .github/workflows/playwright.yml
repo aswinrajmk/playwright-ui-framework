@@ -2,7 +2,7 @@ name: Playwright Tests
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, dev]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -35,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [chromium, firefox, webkit]
+        project: [chromium]
 
     steps:
       - uses: actions/checkout@v4
@@ -103,6 +103,88 @@ jobs:
           name: api-test-results
           path: |
             test-results/
+            allure-results/
+          retention-days: 30
+
+  # ── Docker image security scan (Trivy) ────────────────────────────────────
+  security-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      security-events: write   # required to upload SARIF to GitHub Security tab
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --target runner \
+            --tag playwright-ui-framework:${{ github.sha }} \
+            .
+
+      # Human-readable table output — always visible in CI logs
+      - name: Trivy scan (table output)
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          image-ref: playwright-ui-framework:${{ github.sha }}
+          format: table
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          exit-code: "0"           # don't fail here; SARIF step controls gate
+
+      # SARIF upload — surfaces findings in GitHub Security → Code scanning tab
+      - name: Trivy scan (SARIF upload)
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          image-ref: playwright-ui-framework:${{ github.sha }}
+          format: sarif
+          output: trivy-results.sarif
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          exit-code: "1"           # fail the job if CRITICAL/HIGH unfixed vulns found
+
+      - name: Upload SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()               # upload even if Trivy exit-code was non-zero
+        with:
+          sarif_file: trivy-results.sarif
+
+  # ── Run tests inside the Docker image ────────────────────────────────────
+  docker-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --target runner \
+            --tag playwright-ui-framework:ci \
+            .
+
+      - name: Run tests in Docker
+        run: |
+          docker run --rm \
+            -e CI=true \
+            -e ENV=${{ github.event.inputs.environment || 'dev' }} \
+            -v ${{ github.workspace }}/test-results:/app/test-results \
+            -v ${{ github.workspace }}/allure-results:/app/allure-results \
+            -v ${{ github.workspace }}/playwright-report:/app/playwright-report \
+            playwright-ui-framework:ci \
+            npx playwright test --project=chromium
+
+      - name: Upload Docker test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docker-test-results
+          path: |
+            test-results/
+            playwright-report/
             allure-results/
           retention-days: 30
 

@@ -1,0 +1,44 @@
+# ── Dependencies (re-installed inside image via npm ci) ───────────────────────
+node_modules/
+
+# ── Git internals ─────────────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── Secrets — NEVER bake into image ──────────────────────────────────────────
+.env
+.env.*
+# Note: environments/*.env are intentionally excluded too.
+# Pass env vars at runtime via docker-compose env_file or -e flags.
+environments/
+
+# ── Generated test artifacts (output dirs, not source) ────────────────────────
+test-results/
+playwright-report/
+allure-results/
+allure-report/
+blob-report/
+auth-state/
+dist/
+
+# ── Claude Code project files ─────────────────────────────────────────────────
+.claude/
+
+# ── CI/CD and Docker config (not needed inside container) ────────────────────
+.github/
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# ── Documentation ─────────────────────────────────────────────────────────────
+*.md
+README*
+
+# ── OS and editor noise ───────────────────────────────────────────────────────
+.DS_Store
+*.log
+.vscode/
+.idea/
+
+# ── TypeScript build output ───────────────────────────────────────────────────
+tsconfig.tsbuildinfo
