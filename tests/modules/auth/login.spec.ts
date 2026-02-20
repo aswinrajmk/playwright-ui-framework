@@ -6,19 +6,17 @@ test.describe("Login Page", () => {
     await loginPage.navigate();
   });
 
-  // @sanity — core happy path
-  test("should display login page elements", { tag: "@sanity" }, async ({ loginPage }) => {
+  test("PROJ-101 | should display login page elements", async ({ loginPage }) => {
     expect(await loginPage.isLogoVisible()).toBe(true);
     expect(await loginPage.isLoginButtonVisible()).toBe(true);
   });
 
-  test("should login with valid credentials", { tag: "@sanity" }, async ({ loginPage, page }) => {
+  test("PROJ-102 | should login with valid credentials", async ({ loginPage, page }) => {
     await loginPage.login(users.standardUser);
     await expect(page).toHaveURL(/inventory/);
   });
 
-  // @regression — extended error coverage
-  test("should show error for invalid credentials", { tag: "@regression" }, async ({ loginPage }) => {
+  test("PROJ-103 | should show error for invalid credentials", async ({ loginPage }) => {
     await loginPage.login(users.invalidUser);
     expect(await loginPage.isErrorVisible()).toBe(true);
     const errorMsg = await loginPage.getErrorMessage();
@@ -27,21 +25,20 @@ test.describe("Login Page", () => {
     );
   });
 
-  test("should show error for locked out user", { tag: "@regression" }, async ({ loginPage }) => {
+  test("PROJ-104 | should show error for locked out user", async ({ loginPage }) => {
     await loginPage.login(users.lockedOutUser);
     expect(await loginPage.isErrorVisible()).toBe(true);
     const errorMsg = await loginPage.getErrorMessage();
     expect(errorMsg).toContain("locked out");
   });
 
-  // @mock — boundary / empty field validation
-  test("should show error when username is empty", { tag: "@mock" }, async ({ loginPage }) => {
+  test("PROJ-105 | should show error when username is empty", async ({ loginPage }) => {
     await loginPage.login({ username: "", password: "secret_sauce" });
     const errorMsg = await loginPage.getErrorMessage();
     expect(errorMsg).toContain("Username is required");
   });
 
-  test("should show error when password is empty", { tag: "@mock" }, async ({ loginPage }) => {
+  test("PROJ-106 | should show error when password is empty", async ({ loginPage }) => {
     await loginPage.login({ username: "standard_user", password: "" });
     const errorMsg = await loginPage.getErrorMessage();
     expect(errorMsg).toContain("Password is required");

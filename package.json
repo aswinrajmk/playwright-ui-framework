@@ -4,8 +4,10 @@
   "description": "Enterprise-grade Playwright + TypeScript test automation framework",
   "scripts": {
     "test": "npx playwright test",
-    "test:ui": "npx playwright test tests/ui",
-    "test:api": "npx playwright test tests/api",
+    "test:smoke": "npx playwright test --config suites/smoke.config.ts",
+    "test:regression": "npx playwright test --config suites/regression.config.ts",
+    "test:ui": "npx playwright test --project=chromium",
+    "test:api": "npx playwright test --project=api",
     "test:headed": "npx playwright test --headed",
     "test:debug": "npx playwright test --debug",
     "test:dev": "cross-env ENV=dev npx playwright test",

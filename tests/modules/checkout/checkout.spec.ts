@@ -10,8 +10,7 @@ test.describe("Checkout Flow", () => {
     await inventoryPage.header.goToCart();
   });
 
-  // @sanity — core happy path
-  test("should complete full checkout flow", { tag: "@sanity" }, async ({
+  test("PROJ-401 | should complete full checkout flow", async ({
     cartPage,
     checkoutPage,
     page,
@@ -33,8 +32,7 @@ test.describe("Checkout Flow", () => {
     expect(header).toBe("Thank you for your order!");
   });
 
-  // @regression — navigation flows
-  test("should cancel checkout and return to cart", { tag: "@regression" }, async ({
+  test("PROJ-402 | should cancel checkout and return to cart", async ({
     cartPage,
     checkoutPage,
     page,
@@ -44,7 +42,7 @@ test.describe("Checkout Flow", () => {
     await expect(page).toHaveURL(/cart/);
   });
 
-  test("should return to products after checkout complete", { tag: "@regression" }, async ({
+  test("PROJ-403 | should return to products after checkout complete", async ({
     cartPage,
     checkoutPage,
     page,
@@ -57,8 +55,7 @@ test.describe("Checkout Flow", () => {
     await expect(page).toHaveURL(/inventory/);
   });
 
-  // @mock — empty field / boundary validation
-  test("should show error for empty first name", { tag: "@mock" }, async ({
+  test("PROJ-404 | should show error for empty first name", async ({
     cartPage,
     checkoutPage,
   }) => {
@@ -70,7 +67,7 @@ test.describe("Checkout Flow", () => {
     expect(error).toContain("First Name is required");
   });
 
-  test("should show error for empty last name", { tag: "@mock" }, async ({
+  test("PROJ-405 | should show error for empty last name", async ({
     cartPage,
     checkoutPage,
   }) => {
@@ -82,7 +79,7 @@ test.describe("Checkout Flow", () => {
     expect(error).toContain("Last Name is required");
   });
 
-  test("should show error for empty postal code", { tag: "@mock" }, async ({
+  test("PROJ-406 | should show error for empty postal code", async ({
     cartPage,
     checkoutPage,
   }) => {

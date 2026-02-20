@@ -10,8 +10,7 @@ test.describe("Cart Page", () => {
     await inventoryPage.header.goToCart();
   });
 
-  // @sanity — core happy path
-  test("should display cart with added items", { tag: "@sanity" }, async ({ cartPage }) => {
+  test("PROJ-301 | should display cart with added items", async ({ cartPage }) => {
     const title = await cartPage.getPageTitle();
     expect(title).toBe("Your Cart");
 
@@ -19,19 +18,18 @@ test.describe("Cart Page", () => {
     expect(count).toBe(2);
   });
 
-  test("should proceed to checkout", { tag: "@sanity" }, async ({ cartPage, page }) => {
+  test("PROJ-302 | should proceed to checkout", async ({ cartPage, page }) => {
     await cartPage.checkout();
     await expect(page).toHaveURL(/checkout-step-one/);
   });
 
-  // @regression — extended coverage
-  test("should display correct item names in cart", { tag: "@regression" }, async ({ cartPage }) => {
+  test("PROJ-303 | should display correct item names in cart", async ({ cartPage }) => {
     const names = await cartPage.cartItems.getItemNames();
     expect(names).toContain("Sauce Labs Backpack");
     expect(names).toContain("Sauce Labs Bike Light");
   });
 
-  test("should remove item from cart", { tag: "@regression" }, async ({ cartPage }) => {
+  test("PROJ-304 | should remove item from cart", async ({ cartPage }) => {
     await cartPage.cartItems.removeItemByName("Sauce Labs Backpack");
     const count = await cartPage.cartItems.getItemCount();
     expect(count).toBe(1);
@@ -40,13 +38,12 @@ test.describe("Cart Page", () => {
     expect(names).not.toContain("Sauce Labs Backpack");
   });
 
-  test("should continue shopping from cart", { tag: "@regression" }, async ({ cartPage, page }) => {
+  test("PROJ-305 | should continue shopping from cart", async ({ cartPage, page }) => {
     await cartPage.continueShopping();
     await expect(page).toHaveURL(/inventory/);
   });
 
-  // @mock — badge/state boundary checks
-  test("should update cart badge after removal", { tag: "@mock" }, async ({ cartPage }) => {
+  test("PROJ-306 | should update cart badge after removal", async ({ cartPage }) => {
     expect(await cartPage.header.getCartCount()).toBe(2);
     await cartPage.cartItems.removeItemByName("Sauce Labs Backpack");
     expect(await cartPage.header.getCartCount()).toBe(1);

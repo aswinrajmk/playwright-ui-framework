@@ -1,4 +1,5 @@
-name: Mock Tests
+name: Mock Suite
+run-name: "Mock_Suite_#${{ github.run_number }}_(${{ github.event.inputs.environment }})"
 
 # Trigger: manual only — choose environment before running
 on:
@@ -15,24 +16,23 @@ on:
           - prod
 
 # ─────────────────────────────────────────────────────────────────────────────
-# TESTS INCLUDED IN THIS SUITE  (tag: @mock)
-# Add/remove tests by editing the tag in the spec file, not here.
+# TESTS INCLUDED IN THIS SUITE  (defined in suites/mock.config.ts)
 #
 # UI Tests (chromium):
-#   login.spec.ts
-#     ✔ should show error when username is empty
-#     ✔ should show error when password is empty
-#   cart.spec.ts
-#     ✔ should update cart badge after removal
-#   checkout.spec.ts
-#     ✔ should show error for empty first name
-#     ✔ should show error for empty last name
-#     ✔ should show error for empty postal code
+#   auth/login.spec.ts
+#     ✔ PROJ-105  should show error when username is empty
+#     ✔ PROJ-106  should show error when password is empty
+#   cart/cart.spec.ts
+#     ✔ PROJ-306  should update cart badge after removal
+#   checkout/checkout.spec.ts
+#     ✔ PROJ-404  should show error for empty first name
+#     ✔ PROJ-405  should show error for empty last name
+#     ✔ PROJ-406  should show error for empty postal code
 #
 # API Tests:
-#   users.spec.ts
-#     ✔ PATCH /posts/:id - should partially update a post
-#     ✔ DELETE /posts/:id - should delete a post
+#   api/users.spec.ts
+#     ✔ PROJ-507  PATCH /posts/:id - should partially update a post
+#     ✔ PROJ-508  DELETE /posts/:id - should delete a post
 # ─────────────────────────────────────────────────────────────────────────────
 
 jobs:
@@ -53,11 +53,11 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
-      - name: Run @mock UI tests
+      - name: Run Mock UI tests
         env:
           ENV: ${{ github.event.inputs.environment }}
           CI: "true"
-        run: npx playwright test --grep "@mock" --project=chromium
+        run: npx playwright test --config suites/mock.config.ts --project=chromium
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -83,11 +83,11 @@ jobs:
 
       - run: npm ci
 
-      - name: Run @mock API tests
+      - name: Run Mock API tests
         env:
           ENV: ${{ github.event.inputs.environment }}
           CI: "true"
-        run: npx playwright test --grep "@mock" --project=api
+        run: npx playwright test --config suites/mock.config.ts --project=api
 
       - uses: actions/upload-artifact@v4
         if: always()

@@ -1,4 +1,5 @@
-name: Smoke Tests
+name: Smoke Suite
+run-name: "Smoke_Suite_#${{ github.run_number }}_${{ github.event.head_commit.timestamp }}"
 
 # Trigger: every push to dev or main
 on:
@@ -6,28 +7,25 @@ on:
     branches: [main, dev]
 
 # ─────────────────────────────────────────────────────────────────────────────
-# TESTS INCLUDED IN THIS SUITE  (tag: @sanity)
-# Add/remove tests by editing the tag in the spec file, not here.
+# TESTS INCLUDED IN THIS SUITE  (defined in suites/smoke.config.ts)
 #
 # UI Tests (chromium):
-#   login.spec.ts
-#     ✔ should display login page elements
-#     ✔ should login with valid credentials
-#   inventory.spec.ts
-#     ✔ should display products after login
-#     ✔ should add product to cart and update badge
-#   cart.spec.ts
-#     ✔ should display cart with added items
-#     ✔ should proceed to checkout
-#   checkout.spec.ts
-#     ✔ should complete full checkout flow
-#   product-detail.spec.ts
-#     ✔ should display product details
+#   auth/login.spec.ts
+#     ✔ PROJ-101  should display login page elements
+#     ✔ PROJ-102  should login with valid credentials
+#   inventory/inventory.spec.ts
+#     ✔ PROJ-201  should display products after login
+#     ✔ PROJ-202  should add product to cart and update badge
+#   cart/cart.spec.ts
+#     ✔ PROJ-301  should display cart with added items
+#     ✔ PROJ-302  should proceed to checkout
+#   checkout/checkout.spec.ts
+#     ✔ PROJ-401  should complete full checkout flow
 #
 # API Tests:
-#   users.spec.ts
-#     ✔ GET /users - should return list of users
-#     ✔ POST /posts - should create a new post
+#   api/users.spec.ts
+#     ✔ PROJ-501  GET /users - should return list of users
+#     ✔ PROJ-502  POST /posts - should create a new post
 # ─────────────────────────────────────────────────────────────────────────────
 
 jobs:
@@ -48,11 +46,11 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
-      - name: Run @sanity UI tests
+      - name: Run Smoke UI tests
         env:
           ENV: dev
           CI: "true"
-        run: npx playwright test --grep "@sanity" --project=chromium
+        run: npx playwright test --config suites/smoke.config.ts --project=chromium
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -78,11 +76,11 @@ jobs:
 
       - run: npm ci
 
-      - name: Run @sanity API tests
+      - name: Run Smoke API tests
         env:
           ENV: dev
           CI: "true"
-        run: npx playwright test --grep "@sanity" --project=api
+        run: npx playwright test --config suites/smoke.config.ts --project=api
 
       - uses: actions/upload-artifact@v4
         if: always()
