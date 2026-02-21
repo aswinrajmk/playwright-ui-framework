@@ -22,12 +22,5 @@ export default defineConfig({
   ...baseConfig,
   testDir: "../tests/modules",
   metadata: { suiteName: "Smoke Suite" },
-  testMatch: [
-    "auth/login.spec.ts",
-    "inventory/inventory.spec.ts",
-    "cart/cart.spec.ts",
-    "checkout/checkout.spec.ts",
-    "api/users.spec.ts",
-  ],
   grep: /PROJ-101|PROJ-102|PROJ-201|PROJ-202|PROJ-301|PROJ-302|PROJ-401|PROJ-501|PROJ-502/,
 });

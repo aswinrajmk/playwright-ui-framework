@@ -65,12 +65,4 @@ export default defineConfig({
   ...baseConfig,
   testDir: "../tests/modules",
   metadata: { suiteName: "Regression Suite" },
-  testMatch: [
-    "auth/login.spec.ts",
-    "inventory/inventory.spec.ts",
-    "inventory/product-detail.spec.ts",
-    "cart/cart.spec.ts",
-    "checkout/checkout.spec.ts",
-    "api/users.spec.ts",
-  ],
 });
