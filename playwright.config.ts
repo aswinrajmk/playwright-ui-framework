@@ -1,6 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
 import { envConfig } from "./src/config/env.config";
-import path from "path";
 
 export default defineConfig({
   testDir: "./tests/modules",
@@ -56,8 +55,7 @@ export default defineConfig({
     // },
     {
       name: "api",
-      testDir: path.join(__dirname, "tests/modules/api"),
-      testMatch: ["**/*.spec.ts"],
+      testMatch: ["**/api/*.spec.ts"],
       use: {
         baseURL: envConfig.API_BASE_URL,
       },
