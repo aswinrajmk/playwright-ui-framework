@@ -17,7 +17,7 @@ export class DataHelper {
   }
 
   static randomEmail(): string {
-    return `test_${this.randomString(6)}@example.com`;
+    return `test_${DataHelper.randomString(6)}@example.com`;
   }
 
   static randomNumber(min: number, max: number): number {

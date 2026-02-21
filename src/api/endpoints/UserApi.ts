@@ -1,5 +1,5 @@
-import { ApiClient } from "@api/ApiClient";
-import { ApiUser, ApiPost } from "@data/types";
+import type { ApiClient } from "@api/ApiClient";
+import type { ApiUser, ApiPost } from "@data/types";
 
 export class UserApi {
   constructor(private readonly client: ApiClient) {}

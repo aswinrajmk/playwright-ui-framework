@@ -22,21 +22,20 @@
     "allure:open": "allure open allure-report",
     "allure:report": "npm run allure:generate && npm run allure:open",
     "test:allure": "npx playwright test tests/api && npm run allure:generate && npm run allure:open",
-    "lint": "eslint src/ tests/",
-    "lint:fix": "eslint src/ tests/ --fix",
-    "format": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "format": "biome format --write .",
+    "check": "biome check --write .",
     "clean": "rm -rf test-results allure-results allure-report playwright-report"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.4",
     "@playwright/test": "^1.50.0",
     "@types/node": "^22.0.0",
     "allure-playwright": "^3.0.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.0",
-    "eslint": "^9.0.0",
-    "prettier": "^3.4.0",
     "typescript": "^5.7.0",
-    "typescript-eslint": "^8.56.0",
     "winston": "^3.17.0"
   },
   "engines": {
