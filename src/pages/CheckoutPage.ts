@@ -1,7 +1,7 @@
-import { Page, Locator } from "@playwright/test";
+import type { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
 import { Header } from "@components/Header";
-import { CheckoutInfo } from "@data/types";
+import type { CheckoutInfo } from "@data/types";
 
 export class CheckoutPage extends BasePage {
   protected readonly url = "/checkout-step-one.html";

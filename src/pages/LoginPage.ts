@@ -1,6 +1,6 @@
-import { Page, Locator } from "@playwright/test";
+import type { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
-import { UserCredentials } from "@data/types";
+import type { UserCredentials } from "@data/types";
 
 export class LoginPage extends BasePage {
   protected readonly url = "/";

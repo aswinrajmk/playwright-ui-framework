@@ -1,4 +1,4 @@
-import { Page, Locator } from "@playwright/test";
+import type { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
 import { Header } from "@components/Header";
 import { CartItemComponent } from "@components/CartItemComponent";

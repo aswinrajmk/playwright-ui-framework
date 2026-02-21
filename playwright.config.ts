@@ -34,6 +34,7 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
+      testIgnore: ["**/api/**"],
       use: { ...devices["Desktop Chrome"] },
     },
     // {
@@ -54,7 +55,7 @@ export default defineConfig({
     // },
     {
       name: "api",
-      testDir: "./tests/modules/api",
+      testMatch: ["**/api/*.spec.ts"],
       use: {
         baseURL: envConfig.API_BASE_URL,
       },
