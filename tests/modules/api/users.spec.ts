@@ -1,7 +1,18 @@
 import { apiTest as test, expect } from "@fixtures/api.fixture";
+import { epic, feature, story, severity, tags, allureId } from "allure-js-commons";
 
 test.describe("JSONPlaceholder API", () => {
+  test.beforeEach(async () => {
+    await epic("API");
+    await feature("Users & Posts API");
+  });
+
   test("PROJ-501 | GET /users - should return list of users", async ({ userApi }) => {
+    await allureId("PROJ-501");
+    await story("GET /users - List All Users");
+    await severity("critical");
+    await tags("smoke", "regression");
+
     const { status, data } = await userApi.getUsers();
     expect(status).toBe(200);
     expect(data.length).toBe(10);
@@ -11,6 +22,11 @@ test.describe("JSONPlaceholder API", () => {
   });
 
   test("PROJ-502 | POST /posts - should create a new post", async ({ userApi }) => {
+    await allureId("PROJ-502");
+    await story("POST /posts - Create New Post");
+    await severity("critical");
+    await tags("smoke", "regression");
+
     const payload = {
       userId: 1,
       title: "Test Post",
@@ -25,6 +41,11 @@ test.describe("JSONPlaceholder API", () => {
   });
 
   test("PROJ-503 | GET /users/:id - should return a single user", async ({ userApi }) => {
+    await allureId("PROJ-503");
+    await story("GET /users/:id - Get Single User");
+    await severity("normal");
+    await tags("regression");
+
     const { status, data } = await userApi.getUserById(1);
     expect(status).toBe(200);
     expect(data.id).toBe(1);
@@ -35,6 +56,11 @@ test.describe("JSONPlaceholder API", () => {
   });
 
   test("PROJ-504 | GET /posts - should return list of posts", async ({ userApi }) => {
+    await allureId("PROJ-504");
+    await story("GET /posts - List All Posts");
+    await severity("normal");
+    await tags("regression");
+
     const { status, data } = await userApi.getPosts();
     expect(status).toBe(200);
     expect(data.length).toBe(100);
@@ -44,6 +70,11 @@ test.describe("JSONPlaceholder API", () => {
   });
 
   test("PROJ-505 | GET /posts?userId=1 - should filter posts by user", async ({ userApi }) => {
+    await allureId("PROJ-505");
+    await story("GET /posts?userId - Filter Posts by User");
+    await severity("normal");
+    await tags("regression");
+
     const { status, data } = await userApi.getPostsByUserId(1);
     expect(status).toBe(200);
     expect(data.length).toBeGreaterThan(0);
@@ -53,6 +84,11 @@ test.describe("JSONPlaceholder API", () => {
   });
 
   test("PROJ-506 | PUT /posts/:id - should update a post", async ({ userApi }) => {
+    await allureId("PROJ-506");
+    await story("PUT /posts/:id - Full Update Post");
+    await severity("normal");
+    await tags("regression");
+
     const payload = {
       id: 1,
       userId: 1,
@@ -66,6 +102,11 @@ test.describe("JSONPlaceholder API", () => {
   });
 
   test("PROJ-507 | PATCH /posts/:id - should partially update a post", async ({ userApi }) => {
+    await allureId("PROJ-507");
+    await story("PATCH /posts/:id - Partial Update Post");
+    await severity("minor");
+    await tags("regression", "mock");
+
     const { status, data } = await userApi.patchPost(1, {
       title: "Patched Title",
     });
@@ -75,6 +116,11 @@ test.describe("JSONPlaceholder API", () => {
   });
 
   test("PROJ-508 | DELETE /posts/:id - should delete a post", async ({ userApi }) => {
+    await allureId("PROJ-508");
+    await story("DELETE /posts/:id - Delete Post");
+    await severity("minor");
+    await tags("regression", "mock");
+
     const { status } = await userApi.deletePost(1);
     expect(status).toBe(200);
   });
