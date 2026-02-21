@@ -53,6 +53,16 @@ jobs:
 
       - run: npx playwright install --with-deps chromium
 
+      - name: Capture Chromium version
+        run: |
+          CHROMIUM_BIN=$(find ~/.cache/ms-playwright -path "*/chrome-linux/chrome" -type f 2>/dev/null | head -1)
+          mkdir -p allure-results
+          if [ -n "$CHROMIUM_BIN" ]; then
+            "$CHROMIUM_BIN" --version 2>/dev/null | head -1 > allure-results/.browser-version || echo "Chromium" > allure-results/.browser-version
+          else
+            echo "Chromium" > allure-results/.browser-version
+          fi
+
       - name: Run Mock UI tests
         env:
           ENV: ${{ github.event.inputs.environment }}
@@ -67,6 +77,13 @@ jobs:
             test-results/
             playwright-report/
           retention-days: 7
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-mock-ui
+          path: allure-results/
+          retention-days: 1
 
   mock-api:
     name: Mock — API (${{ github.event.inputs.environment }})
@@ -95,3 +112,112 @@ jobs:
           name: mock-api-results
           path: test-results/
           retention-days: 7
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-mock-api
+          path: allure-results/
+          retention-days: 1
+
+  allure-report:
+    name: Allure Report
+    runs-on: ubuntu-latest
+    needs: [mock-ui, mock-api]
+    if: always()
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch previous Allure history from gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+        continue-on-error: true
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: allure-results-all
+          pattern: allure-results-mock-*
+          merge-multiple: true
+
+      - name: Copy previous Allure history
+        run: |
+          if [ -d "gh-pages/mock/history" ]; then
+            cp -r gh-pages/mock/history allure-results-all/history
+            echo "History copied from gh-pages/mock"
+          else
+            echo "No previous history found, starting fresh"
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - run: npm install -g allure-commandline@2.32.0
+
+      - name: Write Allure environment
+        run: |
+          NODE_VER=$(node --version)
+          PW_VER=$(node -e "console.log(JSON.parse(require('fs').readFileSync('package.json','utf8')).devDependencies['@playwright/test'])")
+          OS_INFO=$(uname -sr)
+          BROWSER_VER=$(cat allure-results-all/.browser-version 2>/dev/null | tr -d '\n' || echo "Chromium")
+          cat > allure-results-all/environment.properties << EOF
+          Environment=${{ github.event.inputs.environment }}
+          Browser=${BROWSER_VER}
+          Base.URL=https://www.saucedemo.com
+          API.URL=https://jsonplaceholder.typicode.com
+          Node.Version=${NODE_VER}
+          Playwright.Version=${PW_VER}
+          OS=${OS_INFO}
+          Runner=ubuntu-latest
+          Build.Number=${{ github.run_number }}
+          Branch=${{ github.ref_name }}
+          EOF
+
+      - name: Write Allure executor
+        env:
+          REPO: ${{ github.repository }}
+          RUN_NUMBER: ${{ github.run_number }}
+          RUN_ID: ${{ github.run_id }}
+          WORKFLOW: ${{ github.workflow }}
+        run: |
+          OWNER=$(echo "$REPO" | cut -d'/' -f1)
+          REPO_NAME=$(echo "$REPO" | cut -d'/' -f2)
+          cat > allure-results-all/executor.json << EOF
+          {
+            "name": "GitHub Actions",
+            "type": "github",
+            "url": "https://github.com/$REPO",
+            "buildOrder": $RUN_NUMBER,
+            "buildName": "$WORKFLOW #$RUN_NUMBER",
+            "buildUrl": "https://github.com/$REPO/actions/runs/$RUN_ID",
+            "reportUrl": "https://$OWNER.github.io/$REPO_NAME/mock/",
+            "reportName": "Allure Report"
+          }
+          EOF
+
+      - name: Copy Allure categories
+        run: cp allure-config/categories.json allure-results-all/categories.json
+
+      - name: Generate Allure report
+        run: allure generate allure-results-all --clean -o allure-report
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: allure-html-report-mock
+          path: allure-report/
+          retention-days: 7
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-report
+          destination_dir: mock
+          keep_files: true

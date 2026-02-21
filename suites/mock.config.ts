@@ -27,6 +27,7 @@ import baseConfig from "../playwright.config";
 export default defineConfig({
   ...baseConfig,
   testDir: "../tests/modules",
+  metadata: { suiteName: "Mock Suite" },
   testMatch: [
     "auth/login.spec.ts",
     "cart/cart.spec.ts",

@@ -64,6 +64,7 @@ import baseConfig from "../playwright.config";
 export default defineConfig({
   ...baseConfig,
   testDir: "../tests/modules",
+  metadata: { suiteName: "Regression Suite" },
   testMatch: [
     "auth/login.spec.ts",
     "inventory/inventory.spec.ts",

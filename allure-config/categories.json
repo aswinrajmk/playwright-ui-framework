@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Infrastructure problems",
+    "matchedStatuses": ["broken", "failed"],
+    "messageRegex": ".*(TimeoutError|ECONNREFUSED|ENOTFOUND|ERR_CONNECTION_REFUSED|ERR_NAME_NOT_RESOLVED|net::ERR).*",
+    "traceRegex": ".*"
+  },
+  {
+    "name": "Product defects",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*expect\\(.*\\).*|.*AssertionError.*|.*Error: expect.*",
+    "traceRegex": ".*"
+  },
+  {
+    "name": "Test defects",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*",
+    "traceRegex": ".*"
+  },
+  {
+    "name": "Ignored tests",
+    "matchedStatuses": ["skipped"]
+  }
+]
