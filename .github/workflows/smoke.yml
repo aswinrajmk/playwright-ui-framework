@@ -120,6 +120,9 @@ jobs:
     if: always()
     permissions:
       contents: write
+    concurrency:
+      group: gh-pages-deploy
+      cancel-in-progress: false
 
     steps:
       - uses: actions/checkout@v4
