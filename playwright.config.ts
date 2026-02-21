@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 import { envConfig } from "./src/config/env.config";
 
 export default defineConfig({
-  testDir: "./tests",
+  testDir: "./tests/modules",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : envConfig.RETRIES,
@@ -54,7 +54,7 @@ export default defineConfig({
     // },
     {
       name: "api",
-      testDir: "./tests/api",
+      testDir: "./tests/modules/api",
       use: {
         baseURL: envConfig.API_BASE_URL,
       },

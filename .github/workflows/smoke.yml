@@ -1,0 +1,90 @@
+name: Smoke Suite
+run-name: "Smoke_Suite_#${{ github.run_number }}_${{ github.event.head_commit.timestamp }}"
+
+# Trigger: every push to dev or main
+on:
+  push:
+    branches: [main, dev]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TESTS INCLUDED IN THIS SUITE  (defined in suites/smoke.config.ts)
+#
+# UI Tests (chromium):
+#   auth/login.spec.ts
+#     ✔ PROJ-101  should display login page elements
+#     ✔ PROJ-102  should login with valid credentials
+#   inventory/inventory.spec.ts
+#     ✔ PROJ-201  should display products after login
+#     ✔ PROJ-202  should add product to cart and update badge
+#   cart/cart.spec.ts
+#     ✔ PROJ-301  should display cart with added items
+#     ✔ PROJ-302  should proceed to checkout
+#   checkout/checkout.spec.ts
+#     ✔ PROJ-401  should complete full checkout flow
+#
+# API Tests:
+#   api/users.spec.ts
+#     ✔ PROJ-501  GET /users - should return list of users
+#     ✔ PROJ-502  POST /posts - should create a new post
+# ─────────────────────────────────────────────────────────────────────────────
+
+jobs:
+  smoke-ui:
+    name: Smoke — UI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      - name: Run Smoke UI tests
+        env:
+          ENV: dev
+          CI: "true"
+        run: npx playwright test --config suites/smoke.config.ts --project=chromium
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-ui-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+  smoke-api:
+    name: Smoke — API
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Run Smoke API tests
+        env:
+          ENV: dev
+          CI: "true"
+        run: npx playwright test --config suites/smoke.config.ts --project=api
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-api-results
+          path: test-results/
+          retention-days: 7

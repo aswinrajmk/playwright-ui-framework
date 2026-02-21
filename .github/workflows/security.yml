@@ -1,4 +1,5 @@
 name: Security Scans
+run-name: "Security_Scan_#${{ github.run_number }}_${{ github.event.head_commit.timestamp || github.sha }}"
 
 on:
   push:

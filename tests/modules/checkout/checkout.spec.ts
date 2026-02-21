@@ -10,25 +10,21 @@ test.describe("Checkout Flow", () => {
     await inventoryPage.header.goToCart();
   });
 
-  test("should complete full checkout flow", async ({
+  test("PROJ-401 | should complete full checkout flow", async ({
     cartPage,
     checkoutPage,
     page,
   }) => {
-    // Step 1: Cart → Checkout
     await cartPage.checkout();
     await expect(page).toHaveURL(/checkout-step-one/);
 
-    // Step 2: Fill info → Overview
     await checkoutPage.fillCheckoutInfo(checkoutData.validCheckout);
     await checkoutPage.continue();
     await expect(page).toHaveURL(/checkout-step-two/);
 
-    // Verify overview has price info
     const total = await checkoutPage.getTotalPrice();
     expect(total).toContain("Total:");
 
-    // Step 3: Finish
     await checkoutPage.finish();
     await expect(page).toHaveURL(/checkout-complete/);
 
@@ -36,7 +32,30 @@ test.describe("Checkout Flow", () => {
     expect(header).toBe("Thank you for your order!");
   });
 
-  test("should show error for empty first name", async ({
+  test("PROJ-402 | should cancel checkout and return to cart", async ({
+    cartPage,
+    checkoutPage,
+    page,
+  }) => {
+    await cartPage.checkout();
+    await checkoutPage.cancel();
+    await expect(page).toHaveURL(/cart/);
+  });
+
+  test("PROJ-403 | should return to products after checkout complete", async ({
+    cartPage,
+    checkoutPage,
+    page,
+  }) => {
+    await cartPage.checkout();
+    await checkoutPage.fillCheckoutInfo(checkoutData.validCheckout);
+    await checkoutPage.continue();
+    await checkoutPage.finish();
+    await checkoutPage.backToHome();
+    await expect(page).toHaveURL(/inventory/);
+  });
+
+  test("PROJ-404 | should show error for empty first name", async ({
     cartPage,
     checkoutPage,
   }) => {
@@ -48,7 +67,7 @@ test.describe("Checkout Flow", () => {
     expect(error).toContain("First Name is required");
   });
 
-  test("should show error for empty last name", async ({
+  test("PROJ-405 | should show error for empty last name", async ({
     cartPage,
     checkoutPage,
   }) => {
@@ -60,7 +79,7 @@ test.describe("Checkout Flow", () => {
     expect(error).toContain("Last Name is required");
   });
 
-  test("should show error for empty postal code", async ({
+  test("PROJ-406 | should show error for empty postal code", async ({
     cartPage,
     checkoutPage,
   }) => {
@@ -70,28 +89,5 @@ test.describe("Checkout Flow", () => {
 
     const error = await checkoutPage.getError();
     expect(error).toContain("Postal Code is required");
-  });
-
-  test("should cancel checkout and return to cart", async ({
-    cartPage,
-    checkoutPage,
-    page,
-  }) => {
-    await cartPage.checkout();
-    await checkoutPage.cancel();
-    await expect(page).toHaveURL(/cart/);
-  });
-
-  test("should return to products after checkout complete", async ({
-    cartPage,
-    checkoutPage,
-    page,
-  }) => {
-    await cartPage.checkout();
-    await checkoutPage.fillCheckoutInfo(checkoutData.validCheckout);
-    await checkoutPage.continue();
-    await checkoutPage.finish();
-    await checkoutPage.backToHome();
-    await expect(page).toHaveURL(/inventory/);
   });
 });
