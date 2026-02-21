@@ -1,5 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 import { envConfig } from "./src/config/env.config";
+import path from "path";
 
 export default defineConfig({
   testDir: "./tests/modules",
@@ -34,6 +35,7 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
+      testIgnore: ["**/api/**"],
       use: { ...devices["Desktop Chrome"] },
     },
     // {
@@ -54,7 +56,8 @@ export default defineConfig({
     // },
     {
       name: "api",
-      testDir: "./tests/modules/api",
+      testDir: path.join(__dirname, "tests/modules/api"),
+      testMatch: ["**/*.spec.ts"],
       use: {
         baseURL: envConfig.API_BASE_URL,
       },

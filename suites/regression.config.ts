@@ -70,6 +70,5 @@ export default defineConfig({
     "inventory/product-detail.spec.ts",
     "cart/cart.spec.ts",
     "checkout/checkout.spec.ts",
-    "api/users.spec.ts",
   ],
 });
