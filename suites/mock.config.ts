@@ -32,6 +32,7 @@ export default defineConfig({
     "auth/login.spec.ts",
     "cart/cart.spec.ts",
     "checkout/checkout.spec.ts",
+    "api/users.spec.ts",
   ],
   grep: /PROJ-105|PROJ-106|PROJ-306|PROJ-404|PROJ-405|PROJ-406|PROJ-507|PROJ-508/,
 });

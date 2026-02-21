@@ -162,6 +162,7 @@ jobs:
 
       - name: Write Allure environment
         run: |
+          mkdir -p allure-results-all
           NODE_VER=$(node --version)
           PW_VER=$(node -e "console.log(JSON.parse(require('fs').readFileSync('package.json','utf8')).devDependencies['@playwright/test'])")
           OS_INFO=$(uname -sr)
