@@ -1,0 +1,2 @@
+info: GET posts {"timestamp":"2026-04-12 03:23:08"}
+info: Response: 200 {"timestamp":"2026-04-12 03:23:08"}
