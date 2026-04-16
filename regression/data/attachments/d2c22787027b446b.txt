@@ -1,0 +1,2 @@
+info: DELETE posts/1 {"timestamp":"2026-04-16 03:26:16"}
+info: Response: 200 {"timestamp":"2026-04-16 03:26:16"}
