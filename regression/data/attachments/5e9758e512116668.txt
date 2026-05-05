@@ -1,0 +1,2 @@
+info: GET users {"timestamp":"2026-05-05 03:28:52"}
+info: Response: 200 {"timestamp":"2026-05-05 03:28:52"}
