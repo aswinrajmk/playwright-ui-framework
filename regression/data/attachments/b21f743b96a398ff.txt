@@ -1,0 +1,2 @@
+info: POST posts {"timestamp":"2026-05-07 03:39:54"}
+info: Response: 201 {"timestamp":"2026-05-07 03:39:54"}
