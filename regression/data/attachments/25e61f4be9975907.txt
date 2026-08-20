@@ -1,0 +1,2 @@
+info: GET posts?userId=1 {"timestamp":"2026-08-20 01:34:05"}
+info: Response: 200 {"timestamp":"2026-08-20 01:34:05"}
