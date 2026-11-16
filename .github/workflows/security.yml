@@ -16,7 +16,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Build Docker image
         run: |
@@ -27,7 +27,7 @@ jobs:
 
       # Human-readable table output — always visible in CI logs
       - name: Trivy scan (table output)
-        uses: aquasecurity/trivy-action@0.30.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: playwright-ui-framework:${{ github.sha }}
           format: table
@@ -37,7 +37,7 @@ jobs:
 
       # SARIF upload — surfaces findings in GitHub Security → Code scanning tab
       - name: Trivy scan (SARIF upload)
-        uses: aquasecurity/trivy-action@0.30.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: playwright-ui-framework:${{ github.sha }}
           format: sarif
@@ -58,12 +58,12 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0             # full history required for blame/new-code analysis
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v8
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
