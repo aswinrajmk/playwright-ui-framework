@@ -29,6 +29,9 @@ export class Header {
 
   async goToCart(): Promise<void> {
     await this.cartLink.click();
+    // SauceDemo routes client-side: URL updates before the view re-renders,
+    // so wait for an element unique to the cart page.
+    await this.page.locator("[data-test='checkout']").waitFor({ state: "visible" });
   }
 
   async openMenu(): Promise<void> {
@@ -49,6 +52,9 @@ export class Header {
   }
 
   async isLogoVisible(): Promise<boolean> {
-    return this.appLogo.isVisible();
+    return this.appLogo
+      .waitFor({ state: "visible", timeout: 5000 })
+      .then(() => true)
+      .catch(() => false);
   }
 }
