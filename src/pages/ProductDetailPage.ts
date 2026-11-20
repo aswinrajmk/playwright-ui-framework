@@ -47,6 +47,9 @@ export class ProductDetailPage extends BasePage {
 
   async goBack(): Promise<void> {
     await this.backButton.click();
+    await this.page
+      .locator("[data-test='product-sort-container']")
+      .waitFor({ state: "visible" });
   }
 
   async isAddToCartVisible(): Promise<boolean> {

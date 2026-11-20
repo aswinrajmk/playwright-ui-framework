@@ -87,5 +87,9 @@ export class InventoryPage extends BasePage {
     await this.page
       .locator("[data-test='inventory-item-name']", { hasText: productName })
       .click();
+    // Client-side routing: wait for the detail view to render, not just the URL.
+    await this.page
+      .locator("[data-test='back-to-products']")
+      .waitFor({ state: "visible" });
   }
 }

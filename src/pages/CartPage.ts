@@ -33,5 +33,8 @@ export class CartPage extends BasePage {
 
   async continueShopping(): Promise<void> {
     await this.continueShoppingButton.click();
+    await this.page
+      .locator("[data-test='product-sort-container']")
+      .waitFor({ state: "visible" });
   }
 }
